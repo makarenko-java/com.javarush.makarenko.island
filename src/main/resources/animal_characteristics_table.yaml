@@ -1,0 +1,89 @@
+wolf:  # Волк
+  weight: 50.0                       # Вес одного животного, кг
+  max_per_cell: 30                   # Максимальное количество животных этого вида на одной клетке
+  max_speed: 3                       # Скорость перемещения, не более чем, клеток за ход
+  food_needed_for_max_satiety: 8.0   # Сколько килограммов пищи нужно животному для полного насыщения
+
+boa:  # Удав
+  weight: 15.0
+  max_per_cell: 30
+  max_speed: 1
+  food_needed_for_max_satiety: 3.0
+
+fox:  # Лиса
+  weight: 8.0
+  max_per_cell: 30
+  max_speed: 2
+  food_needed_for_max_satiety: 2.0
+
+bear:  # Медведь
+  weight: 500.0
+  max_per_cell: 5
+  max_speed: 2
+  food_needed_for_max_satiety: 80.0
+
+eagle:  # Орел
+  weight: 6.0
+  max_per_cell: 20
+  max_speed: 3
+  food_needed_for_max_satiety: 1.0
+
+horse:  # Лошадь
+  weight: 400.0
+  max_per_cell: 20
+  max_speed: 4
+  food_needed_for_max_satiety: 60.0
+
+deer:  # Олень
+  weight: 300.0
+  max_per_cell: 20
+  max_speed: 4
+  food_needed_for_max_satiety: 50.0
+
+rabbit:  # Кролик
+  weight: 2.0
+  max_per_cell: 150
+  max_speed: 2
+  food_needed_for_max_satiety: 0.45
+
+mouse:  # Мышь
+  weight: 0.05
+  max_per_cell: 500
+  max_speed: 1
+  food_needed_for_max_satiety: 0.01
+
+goat:  # Коза
+  weight: 60.0
+  max_per_cell: 140
+  max_speed: 3
+  food_needed_for_max_satiety: 10.0
+
+sheep:  # Овца
+  weight: 70.0
+  max_per_cell: 140
+  max_speed: 3
+  food_needed_for_max_satiety: 15.0
+
+boar:  # Кабан
+  weight: 400.0
+  max_per_cell: 50
+  max_speed: 2
+  food_needed_for_max_satiety: 50.0
+
+buffalo:  # Буйвол
+  weight: 700.0
+  max_per_cell: 10
+  max_speed: 3
+  food_needed_for_max_satiety: 100.0
+
+duck:  # Утка
+  weight: 1.0
+  max_per_cell: 200
+  max_speed: 4
+  food_needed_for_max_satiety: 0.15
+
+caterpillar:  # Гусеница
+  weight: 0.01
+  max_per_cell: 1000
+  max_speed: 0
+  food_needed_for_max_satiety: 0.0

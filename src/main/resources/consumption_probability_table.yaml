@@ -1,0 +1,118 @@
+# Таблица вероятностей поедания одних видов другими.
+# Разделение на хищников (predators) и травоядных (herbivores).
+# Указаны вероятности, где 1.0 означает 100%, а 0.0 — отсутствие возможности.
+
+# Хищники: вероятность поедания других животных и растений.
+predator:
+  wolf:
+    wolf:        0.0   # Волк
+    boa:         0.0   # Удав
+    fox:         0.0   # Лиса
+    bear:        0.0   # Медведь
+    eagle:       0.0   # Орел
+    horse:       0.10  # Лошадь
+    deer:        0.15  # Олень
+    rabbit:      0.60  # Кролик
+    mouse:       0.80  # Мышь
+    goat:        0.60  # Коза
+    sheep:       0.70  # Овца
+    boar:        0.15  # Кабан
+    buffalo:     0.10  # Буйвол
+    duck:        0.40  # Утка
+    caterpillar: 0.0   # Гусеница
+    plant:       0.0   # Растение
+  boa:
+    wolf:        0.0   # Волк
+    boa:         0.0   # Удав
+    fox:         0.15  # Лиса
+    bear:        0.0   # Медведь
+    eagle:       0.0   # Орел
+    horse:       0.0   # Лошадь
+    deer:        0.0   # Олень
+    rabbit:      0.20  # Кролик
+    mouse:       0.40  # Мышь
+    goat:        0.0   # Коза
+    sheep:       0.0   # Овца
+    boar:        0.0   # Кабан
+    buffalo:     0.0   # Буйвол
+    duck:        0.10  # Утка
+    caterpillar: 0.0   # Гусеница
+    plant:       0.0   # Растение
+  fox:
+    wolf:        0.0   # Волк
+    boa:         0.0   # Удав
+    fox:         0.0   # Лиса
+    bear:        0.0   # Медведь
+    eagle:       0.0   # Орел
+    horse:       0.0   # Лошадь
+    deer:        0.0   # Олень
+    rabbit:      0.70  # Кролик
+    mouse:       0.90  # Мышь
+    goat:        0.0   # Коза
+    sheep:       0.0   # Овца
+    boar:        0.0   # Кабан
+    buffalo:     0.0   # Буйвол
+    duck:        0.60  # Утка
+    caterpillar: 0.40  # Гусеница
+    plant:       0.0   # Растение
+  bear:
+    wolf:        0.0   # Волк
+    boa:         0.80  # Удав
+    fox:         0.0   # Лиса
+    bear:        0.0   # Медведь
+    eagle:       0.0   # Орел
+    horse:       0.40  # Лошадь
+    deer:        0.80  # Олень
+    rabbit:      0.80  # Кролик
+    mouse:       0.90  # Мышь
+    goat:        0.70  # Коза
+    sheep:       0.70  # Овца
+    boar:        0.50  # Кабан
+    buffalo:     0.20  # Буйвол
+    duck:        0.10  # Утка
+    caterpillar: 0.0   # Гусеница
+    plant:       0.0   # Растение
+  eagle:
+    wolf:        0.0   # Волк
+    boa:         0.0   # Удав
+    fox:         0.10  # Лиса
+    bear:        0.0   # Медведь
+    eagle:       0.0   # Орел
+    horse:       0.0   # Лошадь
+    deer:        0.0   # Олень
+    rabbit:      0.90  # Кролик
+    mouse:       0.90  # Мышь
+    goat:        0.0   # Коза
+    sheep:       0.0   # Овца
+    boar:        0.0   # Кабан
+    buffalo:     0.0   # Буйвол
+    duck:        0.80  # Утка
+    caterpillar: 0.0   # Гусеница
+    plant:       0.0   # Растение
+
+# Травоядные: вероятность поедания растений и других организмов.
+herbivore:
+  horse:
+    plant:       1.0
+  deer:
+    plant:       1.0
+  rabbit:
+    plant:       1.0
+  mouse:
+    caterpillar: 0.90  # Гусеница
+    plant:       1.0
+  goat:
+    plant:       1.0
+  sheep:
+    plant:       1.0
+  boar:
+    mouse:       0.50  # Мышь
+    caterpillar: 0.90  # Гусеница
+    plant:       1.0
+  buffalo:
+    plant:       1.0
+  duck:
+    caterpillar: 0.90  # Гусеница
+    plant:       1.0
+  caterpillar:
+    plant:       1.0
