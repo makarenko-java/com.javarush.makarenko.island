@@ -17,5 +17,24 @@ public class Settings {
     public static final int ISLAND_COLUMNS = 10;
 
     // Количество дней симуляции
-    public static final int SIMULATION_DAYS = 100;
+    public static final int SIMULATION_DAYS = 200;
+
+    // Параметры класса Plant
+    public static final double PLANT_MAX_WEIGHT_PER_UNIT = 1.0;
+    public static final int MAX_PLANTS_PER_CELL = 200;
+    public static final double PLANT_GROWTH_PER_CYCLE = 0.25;
+
+    // Уменьшение текущей сытости у животных в день, процентов
+    public static final double DAILY_SATIETY_DECREASE = 0.05;
+    // Максимальный уровень сытости в процентах
+    public static final double MAX_SATIETY = 1.0;
+
+
+    // Параметры размножения животных
+    // Вероятность удачного размножения
+    public static final double REPRODUCTION_PROBABILITY = 0.1;
+    // Размер помёта
+    public static final int LITTER_SIZE = 1;
+    // Коэффициент вероятности рождения самцов (< 0.5 - только самки, > 0.5 - только самцы)
+    public static final double BIRTH_GENDER_RATIO = 0.5;
 }

@@ -1,3 +1,4 @@
+import entity.Plant;
 import island.Island;
 import island.IslandSimulation;
 import settings.Settings;
