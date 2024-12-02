@@ -169,7 +169,7 @@ public class Cell implements Runnable {
 
 
             // Животное размножается
-            //animal.reproduce(this);
+            animal.reproduce(this);
 //            animal.chooseDirection(); // Выбирает направление
 //            animal.move();      // Двигается
         }
@@ -180,5 +180,8 @@ public class Cell implements Runnable {
         }
         // Очищаем список животных, доступных для размножения
         partnersForReproduce.clear();
+
+        // Вывод того сколько родилось в каждой клетке за день
+        System.out.println("Родилось за день: " + animalsBornToday.size());
     }
 }

@@ -13,11 +13,11 @@ public class Settings {
     public static final int THREAD_POOL_SIZE = 8;
 
     // Размеры острова
-    public static final int ISLAND_ROWS = 10;
-    public static final int ISLAND_COLUMNS = 10;
+    public static final int ISLAND_ROWS = 2;
+    public static final int ISLAND_COLUMNS = 2;
 
     // Количество дней симуляции
-    public static final int SIMULATION_DAYS = 200;
+    public static final int SIMULATION_DAYS = 100;
 
     // Параметры класса Plant
     public static final double PLANT_MAX_WEIGHT_PER_UNIT = 1.0;

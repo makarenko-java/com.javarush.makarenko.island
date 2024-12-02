@@ -60,7 +60,7 @@ public abstract class Herbivore extends Animal {
         }
     }
 
-    public void eatPlants(Cell cell) {
+    private void eatPlants(Cell cell) {
         int randomTargetIndex = (int) (Math.random() * cell.getPlants().size());
         Plant potentialPrey = cell.getPlants().get(randomTargetIndex);
 

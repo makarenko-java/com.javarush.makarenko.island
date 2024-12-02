@@ -11,14 +11,14 @@ import java.util.Map;
 
 @Getter
 public abstract class Animal {
-    private double weight;
-    private int maxPerCell;
-    private int maxSpeed;
-    private double foodNeededForMaxSatiety;
-    private Map<String, Double> consumptionProbability;
+    private final double weight;
+    private final int maxPerCell;
+    private final int maxSpeed;
+    private final double foodNeededForMaxSatiety;
+    private final Map<String, Double> consumptionProbability;
     @Setter
     private double currentSatiety;
-    private String gender;
+    private final String gender;
     @Setter
     private boolean isAvailable;
 
@@ -39,6 +39,9 @@ public abstract class Animal {
     }
 
     public abstract void eat(Cell cell);
+    public abstract void move();
+    public abstract void chooseDirection();
+
 
     public void reproduce(Cell cell) {
         // Проверка на то, участвовала ли самка в удачном размножении
@@ -58,7 +61,7 @@ public abstract class Animal {
                             // которые будут добавлены в основной список в конце дня
                             try {
                                 for (int i = 0; i < Settings.LITTER_SIZE; i++) {
-                                    //cell.getAnimalsMovedInToday().add(this.getClass().getDeclaredConstructor().newInstance());
+                                    cell.getAnimalsBornToday().add(this.getClass().getDeclaredConstructor().newInstance());
                                 }
                             } catch (Exception e) {
                                 throw new RuntimeException("Ошибка при создании нового животного: " + e.getMessage(), e);
@@ -71,7 +74,10 @@ public abstract class Animal {
                     }
                 }
             }
-        } else {
+        }
+
+        // Если животное самец, то
+        if (this.getGender().equals("male")) {
             // Иначе животное самец и перебирая каждое животное из списка доступных к размножению партнеров ищем ему партнера
             for (Animal partnerForReproduce : cell.getPartnersForReproduce()) {
                 // Если класс самца равен классу животного-потенциального партнера и если животное является самкой, то
@@ -82,7 +88,7 @@ public abstract class Animal {
                         // которые будут добавлены в основной список в конце дня
                         try {
                             for (int i = 0; i < Settings.LITTER_SIZE; i++) {
-                                //cell.getAnimalsMovedInToday().add(this.getClass().getDeclaredConstructor().newInstance());
+                                cell.getAnimalsBornToday().add(this.getClass().getDeclaredConstructor().newInstance());
                             }
                         } catch (Exception e) {
                             throw new RuntimeException("Ошибка при создании нового животного: " + e.getMessage(), e);
@@ -96,10 +102,6 @@ public abstract class Animal {
             }
         }
     }
-
-    public abstract void move();
-
-    public abstract void chooseDirection();
 
     public void decreaseSatiety() {
         if (this.getFoodNeededForMaxSatiety() > 0) {
