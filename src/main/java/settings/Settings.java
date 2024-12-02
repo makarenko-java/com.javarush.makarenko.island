@@ -24,9 +24,9 @@ public class Settings {
     public static final int MAX_PLANTS_PER_CELL = 200;
     public static final double PLANT_GROWTH_PER_CYCLE = 0.25;
 
-    // Уменьшение текущей сытости у животных в день, процентов
+    // Уменьшение текущей сытости у животных в день
     public static final double DAILY_SATIETY_DECREASE = 0.05;
-    // Максимальный уровень сытости в процентах
+    // Максимальный уровень сытости
     public static final double MAX_SATIETY = 1.0;
 
 
@@ -35,6 +35,6 @@ public class Settings {
     public static final double REPRODUCTION_PROBABILITY = 0.1;
     // Размер помёта
     public static final int LITTER_SIZE = 1;
-    // Коэффициент вероятности рождения самцов (< 0.5 - только самки, > 0.5 - только самцы)
+    // Коэффициент полового дисбаланса (при = 0.5, < 0.5 - только самки, > 0.5 - только самцы)
     public static final double BIRTH_GENDER_RATIO = 0.5;
 }
