@@ -117,15 +117,23 @@ public class Cell implements Runnable {
         }
     }
 
-    public void incrementAnimalsCount(Animal animal) {
+    public boolean incrementAnimalsCount(Animal animal) {
         animalsCountByClassLock.lock();
         try {
             Class<? extends Animal> animalClass = animal.getClass();
             if (animalsCountByClass.containsKey(animalClass)) {
+
                 int count = animalsCountByClass.get(animalClass);
-                animalsCountByClass.put(animalClass, count + 1);
+
+                if (animal.getMaxPerCell() >= (count + 1)) {
+                    animalsCountByClass.put(animalClass, count + 1);
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 animalsCountByClass.put(animalClass, 1);
+                return true;
             }
         } finally {
             animalsCountByClassLock.unlock();
@@ -167,21 +175,16 @@ public class Cell implements Runnable {
             // Животное кушает
             animal.eat(this);
 
-
             // Животное размножается
             animal.reproduce(this);
+
 //            animal.chooseDirection(); // Выбирает направление
 //            animal.move();      // Двигается
         }
 
-        // Рост растений
-        for (Plant plant : this.plants) {
-            plant.grow();
-        }
         // Очищаем список животных, доступных для размножения
         partnersForReproduce.clear();
-
-        // Вывод того сколько родилось в каждой клетке за день
-        System.out.println("Родилось за день: " + animalsBornToday.size());
+//        // Вывод того сколько родилось в каждой клетке за день
+//        System.out.println("Родилось за день: " + animalsBornToday.size());
     }
 }

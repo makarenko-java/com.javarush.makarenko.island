@@ -49,6 +49,9 @@ public class IslandSimulation {
             decreaseAnimalsSatiety();
             // Удаление животных, которые умерли и переместились из клетки, из списка животных клетки
             removeFromAnimalsList();
+            // Рост растений
+            growPlants();
+
 
             // Вывод статистики по острову в конце дня
             System.out.println(collectEntityStatistics());
@@ -59,11 +62,12 @@ public class IslandSimulation {
     // Сбор статистики о количестве животных по всем клеткам
     private String collectEntityStatistics() {
         Map<String, Integer> entitylStatistics = new LinkedHashMap<>();
+
+        int totalAnimalCount = 0;
         double totalPlantWeight = 0.0;
 
         for (int i = 0; i < island.getFieldRows(); i++) {
             for (int j = 0; j < island.getFieldColumns(); j++) {
-
                 Cell cell = island.getCell(i, j);
 
                 for (Animal animal : cell.getAnimals()) {
@@ -80,17 +84,37 @@ public class IslandSimulation {
                 for (Plant plant : cell.getPlants()) {
                     totalPlantWeight += plant.getWeight();
                 }
+
+                totalAnimalCount += cell.getAnimals().size();
             }
         }
 
-        String returnStatistics = "Состояние на конец дня, Animal: " + entitylStatistics + ", суммарный вес растений: " + totalPlantWeight + ".";
+
+//        // Код для проверки соответствия суммы всех животных поля-счетчика животных по классам
+//        // и суммарного числа животных в поле животных. Они должны быть равны.
+//        int totalAnimalCountFromAnimalsCountByClass = 0;
+//
+//        for (int i = 0; i < island.getFieldRows(); i++) {
+//            for (int j = 0; j < island.getFieldColumns(); j++) {
+//                Cell cell = island.getCell(i, j);
+//
+//                for (Map.Entry<Class<? extends Animal>, Integer> animalClassCount : cell.getAnimalsCountByClass().entrySet()) {
+//                    totalAnimalCountFromAnimalsCountByClass += animalClassCount.getValue();
+//                }
+//            }
+//        }
+//
+//        // Вывод для проверки счетчиков
+//        String returnStatistics = "Состояние на конец дня, Animal, всего: " + totalAnimalCountFromAnimalsCountByClass + "(" + totalAnimalCount + "), количество животных по классам - " + entitylStatistics + ", суммарный вес растений: " + totalPlantWeight + ".";
+
+        String returnStatistics = "Состояние на конец дня, Animal, всего: " + totalAnimalCount + ", количество животных по классам: " + entitylStatistics + ". Суммарный вес растений: " + totalPlantWeight + ".";
         return returnStatistics;
     }
 
     private void addToAnimalsList() {
         for (int i = 0; i < island.getFieldRows(); i++) {
             for (int j = 0; j < island.getFieldColumns(); j++) {
-                Cell cell = island.getCell(i,j);
+                Cell cell = island.getCell(i, j);
                 cell.getAnimals().addAll(cell.getAnimalsBornToday());
                 cell.getAnimalsBornToday().clear();
             }
@@ -100,7 +124,7 @@ public class IslandSimulation {
     private void removeFromAnimalsList() {
         for (int i = 0; i < island.getFieldRows(); i++) {
             for (int j = 0; j < island.getFieldColumns(); j++) {
-                Cell cell = island.getCell(i,j);
+                Cell cell = island.getCell(i, j);
                 cell.getAnimals().removeAll(cell.getAnimalsDeadToday());
             }
         }
@@ -109,13 +133,26 @@ public class IslandSimulation {
     private void decreaseAnimalsSatiety() {
         for (int i = 0; i < island.getFieldRows(); i++) {
             for (int j = 0; j < island.getFieldColumns(); j++) {
-                Cell cell = island.getCell(i,j);
+                Cell cell = island.getCell(i, j);
 
                 for (Animal animal : cell.getAnimals()) {
                     animal.decreaseSatiety();
                     if (animal.getCurrentSatiety() <= 0) {
                         cell.getAnimalsDeadToday().add(animal);
+                        cell.decrementAnimalsCount(animal);
                     }
+                }
+            }
+        }
+    }
+
+    private void growPlants() {
+        for (int i = 0; i < island.getFieldRows(); i++) {
+            for (int j = 0; j < island.getFieldColumns(); j++) {
+                Cell cell = island.getCell(i, j);
+
+                for (Plant plant : cell.getPlants()) {
+                    plant.grow();
                 }
             }
         }
