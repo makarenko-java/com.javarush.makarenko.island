@@ -39,7 +39,9 @@ public class IslandSimulation {
             // Рост растений
             growPlants();
             // Вывод статистики по острову в конце дня
+            //System.out.println();
             System.out.println(collectEntityStatistics());
+
         }
         executorService.shutdown();  // Остановка ExecutorService
     }

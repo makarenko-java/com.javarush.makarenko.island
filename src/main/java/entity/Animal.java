@@ -1,12 +1,15 @@
 package entity;
 
 import island.Cell;
+import island.Island;
 import lombok.Getter;
 import lombok.Setter;
 import settings.AnimalCharacteristicsTable;
 import settings.ConsumptionProbabilityTable;
 import settings.Settings;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -39,10 +42,6 @@ public abstract class Animal {
     }
 
     public abstract void eat(Cell cell);
-
-    public abstract void move();
-
-    public abstract void chooseDirection();
 
     public void reproduce(Cell cell) {
         // Для животного происходит поиск партнера соответствующего класса и пола.
@@ -87,6 +86,64 @@ public abstract class Animal {
                 }
             }
         }
+    }
+
+    public void move(Cell cell) {
+        // Проверка на возможность перемещения
+        if (this.getMaxSpeed() < 0) return;
+
+        // Проверка на сытость, если уровень сытости животного более 75% от максимальной сытости то животное не перемещается
+        if (this.getCurrentSatiety() > (Settings.MAX_SATIETY * Settings.SATIETY_LEVEL_TO_MOVE)) return;
+
+        // Проверка размеров острова, если 1х1, то перемещение невозможно
+        if (Island.getInstance().getFieldRows() == 1 && Island.getInstance().getFieldColumns() == 1) return;
+
+        // Получаем список доступных координат для перемещения
+        List<int[]> possibleMoves = this.chooseDirection(cell.getCoordinateX(), cell.getCoordinateY());
+        //System.out.println(possibleMoves);
+        boolean isMoved = false;
+
+        while (!isMoved) {
+            int[] randomCoordinates = possibleMoves.get((int) (Math.random() * possibleMoves.size()));
+            int coordinateX = randomCoordinates[0];
+            int coordinateY = randomCoordinates[1];
+            Cell cellToMove = Island.getInstance().getCell(coordinateX, coordinateY);
+
+
+            if (cellToMove.incrementAnimalsCount(this)) {
+                cellToMove.addAnimalsMovedInToday(this);
+                cell.getAnimalsMovedOutToday().add(this);
+
+                //System.out.print("-Переместился-");
+            }
+            //System.out.print("-Не переместился-");
+            isMoved = true;
+        }
+    }
+
+    public List<int[]> chooseDirection(int cellCoordinateX, int cellCoordinateY) {
+        // Список доступных координат для перемещения
+        List<int[]> possibleMoves = new ArrayList<>();
+
+        // Перебор соседних клеток в пределах максимальной скорости
+        for (int i = -this.maxSpeed; i <= this.maxSpeed; i++) {
+            for (int j = -this.maxSpeed; j <= this.maxSpeed; j++) {
+                // Пропускаем текущую клетку
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+
+                // Рассчитываем новые координаты
+                int newX = cellCoordinateX + i;
+                int newY = cellCoordinateY + j;
+
+                // Проверяем, не выходит ли клетка за пределы
+                if (newX >= 0 && newX < Settings.ISLAND_ROWS && newY >= 0 && newY < Settings.ISLAND_COLUMNS) {
+                    possibleMoves.add(new int[]{newX, newY});
+                }
+            }
+        }
+        return possibleMoves;
     }
 
     public void decreaseSatiety() {

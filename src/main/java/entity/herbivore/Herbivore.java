@@ -76,14 +76,4 @@ public abstract class Herbivore extends Animal {
             potentialPrey.reduceWeight(Plant.PLANT_MAX_WEIGHT_PER_UNIT);
         }
     }
-
-    @Override
-    public void move() {
-
-    }
-
-    @Override
-    public void chooseDirection() {
-
-    }
 }

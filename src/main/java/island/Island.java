@@ -3,6 +3,9 @@ package island;
 import lombok.Getter;
 import settings.Settings;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class Island {
 
     // Константы
@@ -10,6 +13,7 @@ public class Island {
 
     // Статические поля
     private static Island instance;
+    private static final Lock islandLock = new ReentrantLock();
 
     // Поля
     @Getter
@@ -28,10 +32,19 @@ public class Island {
 
     // Статические методы
     public static Island getInstance() {
-        if (instance == null) {
-            instance = new Island(Settings.ISLAND_ROWS, Settings.ISLAND_COLUMNS);
+        islandLock.lock(); // Блокировка всего метода
+        try {
+            if (instance == null) {
+                if (Settings.ISLAND_ROWS >= 1 && Settings.ISLAND_COLUMNS >= 1) {
+                    instance = new Island(Settings.ISLAND_ROWS, Settings.ISLAND_COLUMNS);
+                } else {
+                    instance = new Island(1, 1);
+                }
+            }
+            return instance;
+        } finally {
+            islandLock.unlock(); // Разблокировка в конце
         }
-        return instance;
     }
 
     // Методы

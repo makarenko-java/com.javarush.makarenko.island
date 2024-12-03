@@ -220,7 +220,7 @@ public class Cell implements Runnable {
             // Животное размножается
             animal.reproduce(this);
             // Животное перемещается
-            animal.move();
+            animal.move(this);
         }
 
         // Очищаем список животных, доступных для размножения
