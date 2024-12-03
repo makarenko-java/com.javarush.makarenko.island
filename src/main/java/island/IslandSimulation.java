@@ -11,41 +11,60 @@ import java.util.concurrent.Future;
 
 public class IslandSimulation {
 
+    // Поля
     private final ExecutorService executorService;
     private final Island island;
 
+    // Конструкторы
     public IslandSimulation(Island island) {
         this.island = island;
         this.executorService = Executors.newFixedThreadPool(Settings.THREAD_POOL_SIZE); // Количество потоков
     }
 
+    // Методы
     public void startSimulation(int days) {
 
         System.out.printf("Создан остров размером %dx%d.\n", island.getFieldRows(), island.getFieldColumns());
         for (int day = 1; day <= days; day++) {
             // Вывод номера дня
             System.out.println("День " + day + ". ");
+            // Запуск работы животных в клетках
+            processDay();
+            // Добавление рожденных и переместившихся в текущую клетку животных в список животных клетки
+            addToAnimalsList();
+            // Уменьшение сытости всех животных с проверкой на то, не уменьшилась ли сытость до нуля или ниже
+            decreaseAnimalsSatiety();
+            // Удаление животных, которые умерли и переместились из клетки, из списка животных клетки
+            removeFromAnimalsList();
+            // Рост растений
+            growPlants();
+            // Вывод статистики по острову в конце дня
+            System.out.println(collectEntityStatistics());
+        }
+        executorService.shutdown();  // Остановка ExecutorService
+    }
 
-            // --------------------------------------------------------------------------------
-            // Основная реализация многопоточности через execute()
+    private void processDay() {
+        // --------------------------------------------------------------------------------
+        // Основная реализация многопоточности через execute()
 
-            for (int i = 0; i < island.getFieldRows(); i++) {
-                for (int j = 0; j < island.getFieldColumns(); j++) {
-                    executorService.execute(island.getCell(i, j));
-                }
+        for (int i = 0; i < island.getFieldRows(); i++) {
+            for (int j = 0; j < island.getFieldColumns(); j++) {
+                executorService.execute(island.getCell(i, j));
             }
+        }
 
-            for (int i = 0; i < island.getFieldRows(); i++) {
-                for (int j = 0; j < island.getFieldColumns(); j++) {
-                    Cell cell = island.getCell(i, j);
-                    if (!cell.isRunCompleted()) j--;
-                    else cell.setRunCompleted(false);
-                }
+        for (int i = 0; i < island.getFieldRows(); i++) {
+            for (int j = 0; j < island.getFieldColumns(); j++) {
+                Cell cell = island.getCell(i, j);
+                if (!cell.isRunCompleted()) j--;
+                else cell.setRunCompleted(false);
             }
-            // --------------------------------------------------------------------------------
+        }
+        // --------------------------------------------------------------------------------
 
-            // --------------------------------------------------------------------------------
-            // Альтернативная реализация многопоточности через submit() и объекты Future
+        // --------------------------------------------------------------------------------
+        // Альтернативная реализация многопоточности через submit() и объекты Future
 //
 //            List<Future<?>> futures = new ArrayList<>();
 //            for (int i = 0; i < island.getFieldRows(); i++) {
@@ -63,28 +82,11 @@ public class IslandSimulation {
 //                    e.printStackTrace();
 //                }
 //            }
-            // --------------------------------------------------------------------------------
-
-            // Добавление рожденных и переместившихся в текущую клетку животных в список животных клетки
-            addToAnimalsList();
-            // Уменьшение сытости всех животных с проверкой на то, не уменьшилась ли сытость до нуля или ниже
-            decreaseAnimalsSatiety();
-            // Удаление животных, которые умерли и переместились из клетки, из списка животных клетки
-            removeFromAnimalsList();
-            // Рост растений
-            growPlants();
-
-
-            // Вывод статистики по острову в конце дня
-            System.out.println(collectEntityStatistics());
-        }
-        executorService.shutdown();  // Остановка ExecutorService
+        // --------------------------------------------------------------------------------
     }
 
-    // Сбор статистики о количестве животных по всем клеткам
     private String collectEntityStatistics() {
         Map<String, Integer> entitylStatistics = new LinkedHashMap<>();
-
         int totalAnimalCount = 0;
         double totalPlantWeight = 0.0;
 
@@ -93,7 +95,6 @@ public class IslandSimulation {
                 Cell cell = island.getCell(i, j);
 
                 for (Animal animal : cell.getAnimals()) {
-
                     String animalClassName = animal.getClass().getSimpleName();
 
                     if (entitylStatistics.containsKey(animalClassName)) {
@@ -111,7 +112,6 @@ public class IslandSimulation {
             }
         }
 
-
 //        // Код для проверки соответствия суммы всех животных поля-счетчика животных по классам
 //        // и суммарного числа животных в поле животных. Они должны быть равны.
 //        int totalAnimalCountFromAnimalsCountByClass = 0;
@@ -125,9 +125,6 @@ public class IslandSimulation {
 //                }
 //            }
 //        }
-//
-//        // Вывод для проверки счетчиков
-//        String returnStatistics = "Состояние на конец дня. Animal, всего: " + totalAnimalCountFromAnimalsCountByClass + "(" + totalAnimalCount + "), количество животных по классам - " + entitylStatistics + ", суммарный вес растений: " + totalPlantWeight + ".";
 
         String returnStatistics;
 
@@ -146,7 +143,9 @@ public class IslandSimulation {
             for (int j = 0; j < island.getFieldColumns(); j++) {
                 Cell cell = island.getCell(i, j);
                 cell.getAnimals().addAll(cell.getAnimalsBornToday());
+                cell.getAnimals().addAll(cell.getAnimalsMovedInToday());
                 cell.getAnimalsBornToday().clear();
+                cell.getAnimalsMovedInToday().clear();
             }
         }
     }

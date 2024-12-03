@@ -16,16 +16,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Cell implements Runnable {
-    // Координата клетки по оси X на острове
-    @Getter
-    private final int coordinateX;
-    // Координата клетки по оси Y на острове
-    @Getter
-    private final int coordinateY;
 
-    // Флаг, показывающий завершение работы метода run()
-    private boolean isRunCompleted = false;
-
+    // Константы
     @Getter
     public static final List<Class<? extends Animal>> ANIMAL_CLASSES = new ArrayList<>();
 
@@ -34,51 +26,51 @@ public class Cell implements Runnable {
         ANIMAL_CLASSES.addAll(Predator.PREDATOR_CLASSES);
     }
 
-    // Список животных в клетке
+    // Поля
     @Getter
-    private final List<Animal> animals = new ArrayList<>();
-    // Список растений в клетке
+    private final int coordinateX;  // Координата клетки по оси X на острове
     @Getter
-    private final List<Plant> plants = new ArrayList<>();
+    private final int coordinateY;      // Координата клетки по оси Y на острове
 
-    // Списки животных, которые родились, были съедены, прибыли в клетку и убыли из клетки
-    @Getter
-    private final List<Animal> animalsBornToday = new ArrayList<>();
-    @Getter
-    private final List<Animal> animalsDeadToday = new ArrayList<>();
+    private boolean isRunCompleted = false; // Флаг завершения работы метода run()
 
-    private final List<Animal> animalsMovedInToday = new ArrayList<>();
     @Getter
-    private final List<Animal> animalsMovedOutToday = new ArrayList<>();
+    private final List<Animal> animals = new ArrayList<>(); // Список животных в клетке
+    @Getter
+    private final List<Plant> plants = new ArrayList<>();   // Список растений в клетке
+
+    @Getter
+    private final List<Animal> animalsBornToday = new ArrayList<>();  // Родившиеся животные
+    @Getter
+    private final List<Animal> animalsDeadToday = new ArrayList<>();  // Погибшие животные
+
+    private final List<Animal> animalsMovedInToday = new ArrayList<>();  // Прибывшие животные
+    @Getter
+    private final List<Animal> animalsMovedOutToday = new ArrayList<>();  // Убывшие животные
 
     // Список животных, доступных для размножения (которые не участвовали в размножении в текущий день)
     @Getter
     private final List<Animal> partnersForReproduce = new ArrayList<>();
 
-
-    // Карта счетчик животных в клетке по классам для учета maxPerCell при использовании методов reproduce() и move()
+    // Счетчик животных в клетке по классам для учета
     private final Map<Class<? extends Animal>, Integer> animalsCountByClass = new HashMap<>();
 
-
-    // ReentrantLock для синхронизации доступа к спискам
+    // Блокировка для синхронизации доступа к списку прибывших животных
     private final Lock animalsMovedInLock = new ReentrantLock();
+    // Блокировка для синхронизации доступа к счетчику
     private final Lock animalsCountByClassLock = new ReentrantLock();
-
-    // ReentrantLock для синхронизации доступа к флагу
+    // Блокировка для синхронизации доступа к флагу завернешния
     private final Lock runCompletedLock = new ReentrantLock();
 
-
-
+    // Конструкторы
     public Cell(int coordinateX, int coordinateY) {
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
-
         this.populateAnimals();
         this.populatePlants();
     }
 
-
-
+    // Методы
     public void populateAnimals() {
         for (Class<? extends Animal> animalClass : ANIMAL_CLASSES) {
             String className = animalClass.getSimpleName().toLowerCase();
@@ -172,7 +164,24 @@ public class Cell implements Runnable {
         }
     }
 
-    // Метод для безопасного чтения флага
+    public List<Animal> getAnimalsMovedInToday() {
+        animalsMovedInLock.lock();
+        try {
+            return animalsMovedInToday;
+        } finally {
+            animalsMovedInLock.unlock();
+        }
+    }
+
+    public void addAnimalsMovedInToday(Animal animal) {
+        animalsMovedInLock.lock();
+        try {
+            animalsMovedInToday.add(animal);
+        } finally {
+            animalsMovedInLock.unlock();
+        }
+    }
+
     public boolean isRunCompleted() {
         runCompletedLock.lock();
         try {
@@ -182,7 +191,6 @@ public class Cell implements Runnable {
         }
     }
 
-    // Метод для безопасного изменения флага
     public void setRunCompleted(boolean isRunCompleted) {
         runCompletedLock.lock();
         try {
@@ -209,19 +217,17 @@ public class Cell implements Runnable {
 
             // Животное кушает
             animal.eat(this);
-
             // Животное размножается
             animal.reproduce(this);
-
-//            animal.chooseDirection(); // Выбирает направление
-//            animal.move();      // Двигается
+            // Животное перемещается
+            animal.move();
         }
 
         // Очищаем список животных, доступных для размножения
         partnersForReproduce.clear();
+
 //        // Вывод того сколько родилось в каждой клетке за день
 //        System.out.println("Родилось за день: " + animalsBornToday.size());
-
 
         // Устанавливаем флаг, что метод run завершил работу
         setRunCompleted(true);
