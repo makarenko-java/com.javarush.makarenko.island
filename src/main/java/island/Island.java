@@ -1,34 +1,37 @@
 package island;
 
+import lombok.Getter;
+import settings.Settings;
+
 public class Island {
 
+    private static Island instance;
+    @Getter
     private final int fieldRows;
-
+    @Getter
     private final int fieldColumns;
-
     private final Cell[][] field;
 
-    public Island(int rows, int columns) {
+    private Island(int rows, int columns) {
         this.fieldRows = rows;
         this.fieldColumns = columns;
         this.field = new Cell[fieldRows][fieldColumns];
         initializeField();
     }
 
+    public static Island getInstance() {
+        if (instance == null) {
+            instance = new Island(Settings.ISLAND_ROWS, Settings.ISLAND_COLUMNS);
+        }
+        return instance;
+    }
+
     private void initializeField() {
         for (int i = 0; i < fieldRows; i++) {
             for (int j = 0; j < fieldColumns; j++) {
-                field[i][j] = new Cell();
+                field[i][j] = new Cell(i, j);
             }
         }
-    }
-
-    public int getFieldColumns() {
-        return fieldColumns;
-    }
-
-    public int getFieldRows() {
-        return fieldRows;
     }
 
     public Cell getCell(int row, int column) {

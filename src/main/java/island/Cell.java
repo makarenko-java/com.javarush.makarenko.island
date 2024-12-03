@@ -16,6 +16,15 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Cell implements Runnable {
+    // Координата клетки по оси X на острове
+    @Getter
+    private final int coordinateX;
+    // Координата клетки по оси Y на острове
+    @Getter
+    private final int coordinateY;
+
+    // Флаг, показывающий завершение работы метода run()
+    private boolean isRunCompleted = false;
 
     @Getter
     public static final List<Class<? extends Animal>> ANIMAL_CLASSES = new ArrayList<>();
@@ -55,9 +64,15 @@ public class Cell implements Runnable {
     private final Lock animalsMovedInLock = new ReentrantLock();
     private final Lock animalsCountByClassLock = new ReentrantLock();
 
+    // ReentrantLock для синхронизации доступа к флагу
+    private final Lock runCompletedLock = new ReentrantLock();
 
 
-    public Cell() {
+
+    public Cell(int coordinateX, int coordinateY) {
+        this.coordinateX = coordinateX;
+        this.coordinateY = coordinateY;
+
         this.populateAnimals();
         this.populatePlants();
     }
@@ -157,6 +172,26 @@ public class Cell implements Runnable {
         }
     }
 
+    // Метод для безопасного чтения флага
+    public boolean isRunCompleted() {
+        runCompletedLock.lock();
+        try {
+            return isRunCompleted;
+        } finally {
+            runCompletedLock.unlock();
+        }
+    }
+
+    // Метод для безопасного изменения флага
+    public void setRunCompleted(boolean isRunCompleted) {
+        runCompletedLock.lock();
+        try {
+            this.isRunCompleted = isRunCompleted;
+        } finally {
+            runCompletedLock.unlock();
+        }
+    }
+
     @Override
     public void run() {
         // Заполняем Map-счетчик количества животных по классам
@@ -186,5 +221,9 @@ public class Cell implements Runnable {
         partnersForReproduce.clear();
 //        // Вывод того сколько родилось в каждой клетке за день
 //        System.out.println("Родилось за день: " + animalsBornToday.size());
+
+
+        // Устанавливаем флаг, что метод run завершил работу
+        setRunCompleted(true);
     }
 }

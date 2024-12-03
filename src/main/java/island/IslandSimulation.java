@@ -26,22 +26,44 @@ public class IslandSimulation {
             // Вывод номера дня
             System.out.println("День " + day + ". ");
 
-            List<Future<?>> futures = new ArrayList<>();
+            // --------------------------------------------------------------------------------
+            // Основная реализация многопоточности через execute()
+
             for (int i = 0; i < island.getFieldRows(); i++) {
                 for (int j = 0; j < island.getFieldColumns(); j++) {
-                    Future<?> future = executorService.submit(island.getCell(i, j));
-                    futures.add(future);
+                    executorService.execute(island.getCell(i, j));
                 }
             }
 
-            // Ожидаем завершения обработки всех клеток
-            for (Future<?> future : futures) {
-                try {
-                    future.get();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            for (int i = 0; i < island.getFieldRows(); i++) {
+                for (int j = 0; j < island.getFieldColumns(); j++) {
+                    Cell cell = island.getCell(i, j);
+                    if (!cell.isRunCompleted()) j--;
+                    else cell.setRunCompleted(false);
                 }
             }
+            // --------------------------------------------------------------------------------
+
+            // --------------------------------------------------------------------------------
+            // Альтернативная реализация многопоточности через submit() и объекты Future
+//
+//            List<Future<?>> futures = new ArrayList<>();
+//            for (int i = 0; i < island.getFieldRows(); i++) {
+//                for (int j = 0; j < island.getFieldColumns(); j++) {
+//                    Future<?> future = executorService.submit(island.getCell(i, j));
+//                    futures.add(future);
+//                }
+//            }
+//
+//            // Ожидаем завершения обработки всех клеток
+//            for (Future<?> future : futures) {
+//                try {
+//                    future.get();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            // --------------------------------------------------------------------------------
 
             // Добавление рожденных и переместившихся в текущую клетку животных в список животных клетки
             addToAnimalsList();
@@ -105,9 +127,17 @@ public class IslandSimulation {
 //        }
 //
 //        // Вывод для проверки счетчиков
-//        String returnStatistics = "Состояние на конец дня, Animal, всего: " + totalAnimalCountFromAnimalsCountByClass + "(" + totalAnimalCount + "), количество животных по классам - " + entitylStatistics + ", суммарный вес растений: " + totalPlantWeight + ".";
+//        String returnStatistics = "Состояние на конец дня. Animal, всего: " + totalAnimalCountFromAnimalsCountByClass + "(" + totalAnimalCount + "), количество животных по классам - " + entitylStatistics + ", суммарный вес растений: " + totalPlantWeight + ".";
 
-        String returnStatistics = "Состояние на конец дня, Animal, всего: " + totalAnimalCount + ", количество животных по классам: " + entitylStatistics + ". Суммарный вес растений: " + totalPlantWeight + ".";
+        String returnStatistics;
+
+        // Если есть животные - делаем вывод по количеству животных. Иначе делаем упрощенный вывод.
+        if (totalAnimalCount != 0) {
+            returnStatistics = "Состояние на конец дня. Animal, всего: " + totalAnimalCount + ", количество животных по классам: " + entitylStatistics + ". Суммарный вес растений: " + totalPlantWeight + ".";
+        } else {
+            returnStatistics = "Состояние на конец дня. Все животные умерли. Суммарный вес растений: " + totalPlantWeight + ".";
+        }
+
         return returnStatistics;
     }
 

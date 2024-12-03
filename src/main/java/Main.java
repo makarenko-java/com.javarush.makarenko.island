@@ -9,7 +9,7 @@ public class Main {
 
         TableInitializer.initialize();
 
-        Island island = new Island(Settings.ISLAND_ROWS,Settings.ISLAND_COLUMNS);
+        Island island = Island.getInstance();
 
         IslandSimulation simulation = new IslandSimulation(island);
 
