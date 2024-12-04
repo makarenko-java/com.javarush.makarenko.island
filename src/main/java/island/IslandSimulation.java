@@ -5,26 +5,27 @@ import entity.Plant;
 import settings.Settings;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class IslandSimulation {
 
     // Поля
     private final ExecutorService executorService;
+    private final ScheduledExecutorService scheduledExecutorService;
     private final Island island;
 
     // Конструкторы
     public IslandSimulation(Island island) {
         this.island = island;
-        this.executorService = Executors.newFixedThreadPool(Settings.THREAD_POOL_SIZE); // Количество потоков
+        this.executorService = Executors.newFixedThreadPool(Settings.THREAD_POOL_SIZE);
+        this.scheduledExecutorService = Executors.newScheduledThreadPool(Settings.SCHEDULED_THREAD_POOL_SIZE);
     }
 
     // Методы
     public void startSimulation(int days) {
 
         System.out.printf("Создан остров размером %dx%d.\n", island.getFieldRows(), island.getFieldColumns());
+
         for (int day = 1; day <= days; day++) {
             // Вывод номера дня
             System.out.println("День " + day + ". ");
@@ -39,11 +40,37 @@ public class IslandSimulation {
             // Рост растений
             growPlants();
             // Вывод статистики по острову в конце дня
-            //System.out.println();
             System.out.println(collectEntityStatistics());
 
         }
         executorService.shutdown();  // Остановка ExecutorService
+    }
+
+    public void startSimulationWithScheduledExecutorService(int days) {
+
+        System.out.printf("Создан остров размером %dx%d.\n", island.getFieldRows(), island.getFieldColumns());
+
+        // Запускаем периодический рост растений в ScheduledExecutorService
+        scheduledExecutorService.scheduleWithFixedDelay(this::growPlants, 1000, 50, TimeUnit.MILLISECONDS);
+
+
+        for (int day = 1; day <= days; day++) {
+            // Вывод номера дня
+            System.out.println("День " + day + ". ");
+            // Запуск работы животных в клетках
+            processDay();
+            // Добавление рожденных и переместившихся в текущую клетку животных в список животных клетки
+            addToAnimalsList();
+            // Уменьшение сытости всех животных с проверкой на то, не уменьшилась ли сытость до нуля или ниже
+            decreaseAnimalsSatiety();
+            // Удаление животных, которые умерли и переместились из клетки, из списка животных клетки
+            removeFromAnimalsList();
+            // Вывод статистики по острову в конце дня
+            System.out.println(collectEntityStatistics());
+
+        }
+        executorService.shutdown();  // Остановка ExecutorService
+        scheduledExecutorService.shutdown(); // Остановка ScheduledExecutorService
     }
 
     private void processDay() {

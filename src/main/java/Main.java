@@ -12,6 +12,10 @@ public class Main {
 
         IslandSimulation simulation = new IslandSimulation(island);
 
-        simulation.startSimulation(Settings.SIMULATION_DAYS);
+        // Симуляция при которой трава растет исключительно в цикле
+        // simulation.startSimulation(Settings.SIMULATION_DAYS);
+
+        // Симуляция при которой трава растет периодически в ScheduledExecutorService
+        simulation.startSimulationWithScheduledExecutorService(Settings.SIMULATION_DAYS);
     }
 }
