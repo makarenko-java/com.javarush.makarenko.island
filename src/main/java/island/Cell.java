@@ -30,7 +30,7 @@ public class Cell implements Runnable {
     @Getter
     private final int coordinateX;  // Координата клетки по оси X на острове
     @Getter
-    private final int coordinateY;      // Координата клетки по оси Y на острове
+    private final int coordinateY;  // Координата клетки по оси Y на острове
 
     private boolean isRunCompleted = false; // Флаг завершения работы метода run()
 
@@ -77,7 +77,7 @@ public class Cell implements Runnable {
             int maxPerCell = (int) AnimalCharacteristicsTable.getAnimalCharacteristics().get(className).get("max_per_cell");
             // Случайное количество особей для каждого животного в конкретной клетке,
             // с учетом коэффициента масштабируемости
-            int populationCount = (int) (Settings.ANIMAL_POPULATION_SCALE * (Math.random() * (maxPerCell + 1)));
+            int populationCount = (int) ((Math.random() * (maxPerCell + 1)));
 
             for (int i = 0; i < populationCount; i++) {
                 try {
