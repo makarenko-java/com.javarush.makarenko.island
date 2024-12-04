@@ -32,7 +32,7 @@ public abstract class Animal {
 
         Map<String, Object> characteristics = AnimalCharacteristicsTable.getAnimalCharacteristics().get(className);
         this.weight = (double) characteristics.get("weight");
-        this.maxPerCell = (int) characteristics.get("max_per_cell");
+        this.maxPerCell =  (int) ((int) characteristics.get("max_per_cell") * Settings.ANIMAL_POPULATION_SCALE);
         this.maxSpeed = (int) characteristics.get("max_speed");
         this.foodNeededForMaxSatiety = (double) characteristics.get("food_needed_for_max_satiety");
         this.consumptionProbability = ConsumptionProbabilityTable.getConsumptionProbability().get(parentName).get(className);
