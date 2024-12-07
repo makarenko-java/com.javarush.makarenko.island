@@ -10,7 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class Herbivore extends Animal {
+
     public static final List<Class<? extends Animal>> HERBIVORE_CLASSES = Arrays.asList(Boar.class, Buffalo.class, Caterpillar.class, Deer.class, Duck.class, Goat.class, Horse.class, Mouse.class, Rabbit.class, Sheep.class);
+    public static final List<String> HERBIVORE_EMOJI = Arrays.asList("\uD83D\uDC17", "\uD83D\uDC03", "\uD83D\uDC1B", "\uD83E\uDD8C", "\uD83E\uDD86", "\uD83D\uDC10", "\uD83D\uDC0E", "\uD83D\uDC01", "\uD83D\uDC07", "\uD83D\uDC11");
 
     @Override
     public void eat(Cell cell) {

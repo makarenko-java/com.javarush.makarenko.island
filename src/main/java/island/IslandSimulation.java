@@ -2,6 +2,8 @@ package island;
 
 import entity.Animal;
 import entity.Plant;
+import entity.herbivore.Herbivore;
+import entity.predator.Predator;
 import settings.Settings;
 
 import java.util.*;
@@ -141,6 +143,35 @@ public class IslandSimulation {
             }
         }
 
+        String returnStatistics;
+        StringBuilder outputText = new StringBuilder();
+
+        // Если есть животные - делаем вывод по количеству животных. Иначе делаем упрощенный вывод.
+        if (totalAnimalCount != 0) {
+            outputText.append("Состояние по количеству животных на конец дня: ");
+            for (Class<? extends Animal> herbivoreClass : Herbivore.HERBIVORE_CLASSES) {
+                String className = herbivoreClass.getSimpleName();
+                String emoji = Herbivore.HERBIVORE_EMOJI.get(Herbivore.HERBIVORE_CLASSES.indexOf(herbivoreClass));
+                if (entitylStatistics.containsKey(className)) {
+                    outputText.append(emoji + " " + entitylStatistics.get(className) + ", ");
+                }
+            }
+
+            for (Class<? extends Animal> predatorClass : Predator.PREDATOR_CLASSES) {
+                String className = predatorClass.getSimpleName();
+                String emoji = Predator.PREDATOR_EMOJI.get(Predator.PREDATOR_CLASSES.indexOf(predatorClass));
+                if (entitylStatistics.containsKey(className)) {
+                    outputText.append(emoji + " " + entitylStatistics.get(className) + ", ");
+                }
+            }
+
+            outputText.append(String.format("\b\b. Суммарный вес растений: %s %.2f.", Plant.PLANT_EMOJI, totalPlantWeight));
+        } else {
+            outputText.append("Состояние на конец дня. Все животные умерли.");
+        }
+
+        returnStatistics = outputText.toString();
+
 //        // Код для проверки соответствия суммы всех животных поля-счетчика животных по классам
 //        // и суммарного числа животных в поле животных. Они должны быть равны.
 //        int totalAnimalCountFromAnimalsCountByClass = 0;
@@ -154,15 +185,6 @@ public class IslandSimulation {
 //                }
 //            }
 //        }
-
-        String returnStatistics;
-
-        // Если есть животные - делаем вывод по количеству животных. Иначе делаем упрощенный вывод.
-        if (totalAnimalCount != 0) {
-            returnStatistics = "Состояние на конец дня. Animal, всего: " + totalAnimalCount + ", количество животных по классам: " + entitylStatistics + ". Суммарный вес растений: " + totalPlantWeight + ".";
-        } else {
-            returnStatistics = "Состояние на конец дня. Все животные умерли. Суммарный вес растений: " + totalPlantWeight + ".";
-        }
 
         return returnStatistics;
     }

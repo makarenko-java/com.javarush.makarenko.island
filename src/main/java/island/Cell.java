@@ -6,12 +6,12 @@ import entity.herbivore.Herbivore;
 import entity.predator.Predator;
 import lombok.Getter;
 import settings.AnimalCharacteristicsTable;
-import settings.Settings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -35,7 +35,7 @@ public class Cell implements Runnable {
     private boolean isRunCompleted = false; // Флаг завершения работы метода run()
 
     @Getter
-    private final List<Animal> animals = new ArrayList<>(); // Список животных в клетке
+    private final List<Animal> animals = new CopyOnWriteArrayList<>();  // Список животных в клетке
     @Getter
     private final List<Plant> plants = new ArrayList<>();   // Список растений в клетке
 
@@ -50,7 +50,7 @@ public class Cell implements Runnable {
 
     // Список животных, доступных для размножения (которые не участвовали в размножении в текущий день)
     @Getter
-    private final List<Animal> partnersForReproduce = new ArrayList<>();
+    private final List<Animal> partnersForReproduce = new CopyOnWriteArrayList<>();
 
     // Счетчик животных в клетке по классам для учета
     private final Map<Class<? extends Animal>, Integer> animalsCountByClass = new HashMap<>();

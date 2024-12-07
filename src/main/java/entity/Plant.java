@@ -5,9 +5,11 @@ import settings.Settings;
 
 @Getter
 public class Plant {
+
     public static final double PLANT_MAX_WEIGHT_PER_UNIT = Settings.PLANT_MAX_WEIGHT_PER_UNIT;
     public static final int MAX_PLANTS_PER_CELL = Settings.MAX_PLANTS_PER_CELL;
     public static final double PLANT_GROWTH_PER_CYCLE = Settings.PLANT_GROWTH_PER_CYCLE;
+    public static final String PLANT_EMOJI = "\uD83C\uDF3F";
 
     private double weight;
 

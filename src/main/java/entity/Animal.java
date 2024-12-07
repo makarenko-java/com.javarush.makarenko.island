@@ -14,6 +14,7 @@ import java.util.Map;
 
 @Getter
 public abstract class Animal {
+
     private final double weight;
     private final int maxPerCell;
     private final int maxSpeed;
@@ -90,9 +91,10 @@ public abstract class Animal {
 
     public void move(Cell cell) {
         // Проверка на возможность перемещения
-        if (this.getMaxSpeed() < 0) return;
+        if (this.getMaxSpeed() <= 0) return;
 
-        // Проверка на сытость, если уровень сытости животного более 75% от максимальной сытости то животное не перемещается
+        // Проверка на сытость, если уровень сытости животного более SATIETY_LEVEL_TO_MOVE
+        // от максимальной сытости то животное не перемещается
         if (this.getCurrentSatiety() > (Settings.MAX_SATIETY * Settings.SATIETY_LEVEL_TO_MOVE)) return;
 
         // Проверка размеров острова, если 1х1, то перемещение невозможно

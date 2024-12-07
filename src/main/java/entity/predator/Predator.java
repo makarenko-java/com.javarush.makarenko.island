@@ -9,7 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class Predator extends Animal {
+
     public static final List<Class<? extends Animal>> PREDATOR_CLASSES = Arrays.asList(Bear.class, Boa.class, Eagle.class, Fox.class, Wolf.class);
+    public static final List<String> PREDATOR_EMOJI = Arrays.asList("\uD83D\uDC3B", "\uD83D\uDC0D", "\uD83E\uDD85", "\uD83E\uDD8A", "\uD83D\uDC3A");
 
     @Override
     public void eat(Cell cell) {
